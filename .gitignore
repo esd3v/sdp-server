@@ -1,0 +1,7 @@
+node_modules/
+.vscode
+.directory
+sh.exe.stackdump
+dist
+db.json
+*.http
