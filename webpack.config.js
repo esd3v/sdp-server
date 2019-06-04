@@ -1,6 +1,6 @@
 const path = require('path');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
 
 const DIR_SRC = path.resolve(__dirname, './src');
@@ -54,6 +54,6 @@ module.exports = {
     new ProgressBarPlugin({
       format: '[:bar]',
     }),
-    new CleanWebpackPlugin([DIR_BUILD]),
+    new CleanWebpackPlugin(),
   ],
 };
