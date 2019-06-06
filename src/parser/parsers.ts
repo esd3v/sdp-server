@@ -1,4 +1,5 @@
-import * as selectors from '../selectors';
+import * as classes from '../selectors/classes';
+import * as attributes from '../selectors/attributes';
 import {trimWhitespace} from '../misc';
 import {
   getTitleElement,
@@ -11,13 +12,13 @@ import {getAttributeContentFromParent} from './helpers';
 import {attributeContentHasNotBeenParsed} from './errors';
 
 export const isTopicPinned = (topic: Element) =>
-  topic.classList.contains(selectors.sticky);
+  topic.classList.contains(classes.sticky);
 
 export const isTopicLocked = (topic: Element) =>
-  topic.classList.contains(selectors.locked);
+  topic.classList.contains(classes.locked);
 
 export const isTopicAnswered = (topic: Element) =>
-  topic.querySelector(selectors.answered) !== null;
+  topic.querySelector(classes.answered) !== null;
 
 export const getTopicTitle = (topic: Element): string => {
   const element = getTitleElement(topic);
@@ -39,7 +40,7 @@ export const getTopicAuthor = (topic: Element) => {
 
 export const getTopicTimestamp = (topic: Element) => {
   const element = getTimestampElement(topic);
-  const content = getAttributeContentFromParent(element, selectors.timestampAttribute);
+  const content = getAttributeContentFromParent(element, attributes.timestamp);
   const trimmed = parseInt(trimWhitespace(content), 10);
 
   return trimmed;
@@ -55,14 +56,14 @@ export const getTopicReplyCount = (topic: Element) => {
 };
 
 export const getTopicTooltip = (topic: Element) => {
-  const content = getAttributeContentFromParent(topic, selectors.tooltip);
+  const content = getAttributeContentFromParent(topic, attributes.tooltip);
   const regex = new RegExp(`(?<=<div class="topic_hover_text">).*?(?=<\/div)`, 'gs');
   const match = content.match(regex);
 
   if (match) {
     return trimWhitespace(match[0]);
   } else {
-    throw new Error(attributeContentHasNotBeenParsed(selectors.tooltip));
+    throw new Error(attributeContentHasNotBeenParsed(attributes.tooltip));
   }
 };
 

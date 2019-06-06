@@ -1,26 +1,24 @@
-import * as selectors from '../selectors';
+import * as classes from '../selectors/classes';
+import * as attributes from '../selectors/attributes';
 import {
   getElementsFromHTML,
   getElementFromParent,
 } from './helpers';
 
 export const getTopicElements = (html: string) =>
-  getElementsFromHTML(html, selectors.topic);
+  getElementsFromHTML(html, classes.topic);
 
 export const getTitleElement = (topic: Element) =>
-  getElementFromParent(topic, selectors.title);
+  getElementFromParent(topic, classes.title);
 
 export const getAuthorElement = (topic: Element) =>
-  getElementFromParent(topic, selectors.author);
+  getElementFromParent(topic, classes.author);
 
 export const getTimestampElement = (topic: Element) =>
-  getElementFromParent(topic, selectors.timestampContainer);
+  getElementFromParent(topic, `[${attributes.timestamp}]`);
 
 export const getReplyCountElement = (topic: Element) =>
-  getElementFromParent(topic, selectors.replycount);
-
-export const getTooltipElement = (topic: Element) =>
-  getElementFromParent(topic, selectors.tooltip);
+  getElementFromParent(topic, classes.replycount);
 
 export const getLinkElement = (topic: Element) =>
-  getElementFromParent(topic, selectors.topicLink);
+  getElementFromParent(topic, classes.topicLink);

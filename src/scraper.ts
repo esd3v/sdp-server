@@ -1,22 +1,23 @@
 import puppeteer from 'puppeteer';
+import * as attributes from './selectors/attributes';
+import * as classes from './selectors/classes';
 import {browserConfig} from './config';
 import {getDocument} from './parser/helpers';
-import * as selectors from './selectors';
 import {getTopicElements} from './parser/elements';
 
 const hasPagination = (html: string) => {
   const document = getDocument(html);
-  return (document.querySelector(selectors.pageLink)) ? true : false;
+  return (document.querySelector(classes.pageLink)) ? true : false;
 };
 
 // Get topics container, contains topic list and pagination
 const getContainerHTML = (html: string) => {
   const document = getDocument(html);
-  const container = document.querySelector(selectors.container);
+  const container = document.querySelector(classes.container);
   if (container) {
     return container.innerHTML;
   } else {
-    throw new Error(`Element with selector '${selectors.container}' doesn't exist`);
+    throw new Error(`Element with selector '${classes.container}' doesn't exist`);
   }
 };
 
@@ -31,10 +32,10 @@ const innerHTMLToInt = (html: string, selector: string) => {
 };
 
 const getLastPageNumber = (html: string) =>
-  innerHTMLToInt(html, selectors.pageLinkLast);
+  innerHTMLToInt(html, classes.pageLinkLast);
 
 const getCurrentPageNumber = (html: string) =>
-  innerHTMLToInt(html, selectors.pageLinkCurrent);
+  innerHTMLToInt(html, classes.pageLinkCurrent);
 
 export const getTopicList = async ({testing, url}: GetHTML) => {
   // Browser config
@@ -75,10 +76,10 @@ export const getTopicList = async ({testing, url}: GetHTML) => {
     // Don't do these actions if testing, just scrape opened page
     if (!testing) {
       // Go to the first page
-      await clickAndWait(selectors.pageLinkFirst);
+      await clickAndWait(classes.pageLinkFirst);
 
       // Set max topics per page
-      await clickAndWait(selectors.setTopicsCount50);
+      await clickAndWait(classes.setTopicsCount50);
     }
 
     const containerHTML = getContainerHTML(await getPageHTML());
@@ -92,7 +93,7 @@ export const getTopicList = async ({testing, url}: GetHTML) => {
     for (let i = currentPageNumber; i <= pageCount; i++) {
       topicList.push(...getTopicElements(await getPageHTML()));
       if (i !== pageCount) {
-        await clickAndWait(selectors.nextButton);
+        await clickAndWait(attributes.nextButton);
       }
     }
 

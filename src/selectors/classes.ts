@@ -1,0 +1,15 @@
+export const answered = '.forum_topic_answer';
+export const author = '.forum_topic_op';
+export const container = '.forum_area';
+export const locked = 'locked';
+export const pageLink = '.forum_paging_pagelink';
+export const pageLinkCurrent = `${pageLink}.active`;
+export const pageLinkFirst = `${pageLink}:first-child`;
+export const pageLinkLast = `${pageLink}:last-child`;
+export const pagination = '.commentthread_pagelinks';
+export const replycount = '.forum_topic_reply_count';
+export const setTopicsCount50 = '.forum_pagesize_options > a:nth-child(2)';
+export const sticky = 'sticky';
+export const title = '.forum_topic_name';
+export const topic = '.forum_topic';
+export const topicLink = '.forum_topic_overlay';
