@@ -1,16 +1,17 @@
 import puppeteer from 'puppeteer';
 import {browserConfig} from './config';
-import * as parser from './parser';
+import {getDocument} from './parser/helpers';
 import * as selectors from './selectors';
+import {getTopicElements} from './parser/elements';
 
 const hasPagination = (html: string) => {
-  const document = parser.getDocument(html);
+  const document = getDocument(html);
   return (document.querySelector(selectors.pageLink)) ? true : false;
 };
 
 // Get topics container, contains topic list and pagination
 const getContainerHTML = (html: string) => {
-  const document = parser.getDocument(html);
+  const document = getDocument(html);
   const container = document.querySelector(selectors.container);
   if (container) {
     return container.innerHTML;
@@ -20,7 +21,7 @@ const getContainerHTML = (html: string) => {
 };
 
 const innerHTMLToInt = (html: string, selector: string) => {
-  const document = parser.getDocument(html);
+  const document = getDocument(html);
   const el = document.querySelector(selector);
   if (el) {
     return parseInt(el.innerHTML, 10);
@@ -89,7 +90,7 @@ export const getTopicList = async ({testing, url}: GetHTML) => {
       getCurrentPageNumber(containerHTML) : 1;
 
     for (let i = currentPageNumber; i <= pageCount; i++) {
-      topicList.push(...parser.getTopicNodes(await getPageHTML()));
+      topicList.push(...getTopicElements(await getPageHTML()));
       if (i !== pageCount) {
         await clickAndWait(selectors.nextButton);
       }

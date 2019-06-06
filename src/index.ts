@@ -10,8 +10,8 @@ import {
   PERPAGE,
 } from './config';
 import {
-  getPageCount,
-  getPageData,
+  calculatePageCount,
+  getItemsFromPage,
 } from './misc';
 
 let cache: TopicsCache = {
@@ -39,9 +39,9 @@ router.get('/', async ctx => {
     ...params,
   });
 
-  const getPageTotal = () => getPageCount({
+  const getPageTotal = () => calculatePageCount({
     perPage,
-    itemsTotal: cache.topics.length,
+    total: cache.topics.length,
   });
 
   // Validation
@@ -74,8 +74,8 @@ router.get('/', async ctx => {
 
   const content = {
     pageTotal: getPageTotal(),
-    topics: getPageData({
-      topics: cache.topics,
+    topics: getItemsFromPage({
+      arr: cache.topics,
       page,
       perPage,
     }),

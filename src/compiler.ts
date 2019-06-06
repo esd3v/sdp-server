@@ -1,15 +1,15 @@
-import * as parser from './parser';
+import * as parser from './parser/parsers';
 
 export const compileTopic = (topic: Element): Topic => ({
-  pinned: parser.parseIsPinned(topic),
-  locked: parser.parseIsLocked(topic),
-  answered: parser.parseIsAnswered(topic),
-  title: parser.parseTitle(topic),
-  author: parser.parseAuthor(topic),
-  timestamp: parser.parseTimestamp(topic),
-  replyCount: parser.parseReplyCount(topic),
-  tooltip: parser.parseTooltip(topic),
-  url: parser.parseTopicLink(topic),
+  pinned: parser.isTopicPinned(topic),
+  locked: parser.isTopicLocked(topic),
+  answered: parser.isTopicAnswered(topic),
+  title: parser.getTopicTitle(topic),
+  author: parser.getTopicAuthor(topic),
+  timestamp: parser.getTopicTimestamp(topic),
+  replyCount: parser.getTopicReplyCount(topic),
+  tooltip: parser.getTopicTooltip(topic),
+  url: parser.getTopicLink(topic),
 });
 
 export const compileTopics = (list: Element[]): Topic[] =>

@@ -1,8 +1,7 @@
-import * as selectors from '../selectors';
 import {compileTopic} from '../compiler';
 import * as scraper from '../scraper';
 import * as config from '../config';
-import * as parser from '../parser';
+import * as parser from '../parser/parsers';
 
 let topicList: Element[];
 let topicElement: Element;
@@ -20,6 +19,33 @@ test(`Topic list of ${config.TESTURL} has been retrieved`, async () => {
   expect(expected).toBeTruthy();
 }, config.TIMEOUT);
 
+describe('Parse data from scraped topic element', () => {
+  test(`Title has been parsed`, () => {
+    const content = parser.getTopicTitle(topicElement);
+    expect(typeof content).toBe('string');
+  });
+
+  test(`Author has been parsed`, () => {
+    const content = parser.getTopicAuthor(topicElement);
+    expect(typeof content).toBe('string');
+  });
+
+  test(`Timestamp has been parsed`, () => {
+    const content = parser.getTopicTimestamp(topicElement);
+    expect(typeof content).toBe('number');
+  });
+
+  test(`Reply count has been parsed`, () => {
+    const content = parser.getTopicReplyCount(topicElement);
+    expect(typeof content).toBe('number');
+  });
+
+  test(`Tooltip has been parsed`, () => {
+    const content = parser.getTopicTooltip(topicElement);
+    expect(typeof content).toBe('string');
+  });
+});
+
 test(`'Topic' object has been compiled`, () => {
   const topic = compileTopic(topicElement);
   expect(typeof topic.pinned).toBe('boolean');
@@ -30,31 +56,4 @@ test(`'Topic' object has been compiled`, () => {
   expect(typeof topic.timestamp).toBe('number');
   expect(typeof topic.replyCount).toBe('number');
   expect(typeof topic.tooltip).toBe('string');
-});
-
-describe('Parse data from scraped topic element', () => {
-  test(`'Title' of '${selectors.title}' has been parsed`, () => {
-    const content = parser.parseTitle(topicElement);
-    expect(typeof content).toBe('string');
-  });
-
-  test(`'Author' of '${selectors.author}' has been parsed`, () => {
-    const content = parser.parseAuthor(topicElement);
-    expect(typeof content).toBe('string');
-  });
-
-  test(`'Timestamp' of '${selectors.timestampContainer}' has been parsed`, () => {
-    const content = parser.parseTimestamp(topicElement);
-    expect(typeof content).toBe('number');
-  });
-
-  test(`'Reply Count' of '${selectors.replycount}' has been parsed`, () => {
-    const content = parser.parseReplyCount(topicElement);
-    expect(typeof content).toBe('number');
-  });
-
-  test(`'Tooltip' of '${selectors.tooltipRegex}' has been parsed`, () => {
-    const content = parser.parseTooltip(topicElement);
-    expect(typeof content).toBe('string');
-  });
 });

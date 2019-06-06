@@ -1,17 +1,15 @@
-export const trimWhiteSpace = (str: string) => str.replace(/\s+/g, ' ').trim();
+export const trimWhitespace = (str: string) => str.replace(/\s+/g, ' ').trim();
 
-export const nodeListToArray = (list: NodeListOf<Element>) => [...list];
-
-export const getPageCount = ({perPage, itemsTotal}: {
+export const calculatePageCount = ({perPage, total}: {
   perPage: number;
-  itemsTotal: number;
-}) => Math.trunc((itemsTotal + (perPage - 1)) / perPage);
+  total: number;
+}) => Math.trunc((total + (perPage - 1)) / perPage);
 
-export const getPageData = ({topics, page, perPage}: {
-    topics: Topic[];
+export const getItemsFromPage = ({arr, page, perPage}: {
+    arr: any[];
     page: number;
     perPage: number;
   }) => {
   const offset = (page - 1) * perPage;
-  return topics.slice(offset, offset + perPage);
+  return arr.slice(offset, offset + perPage);
 };

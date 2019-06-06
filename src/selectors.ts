@@ -9,7 +9,6 @@ export const replycount = '.forum_topic_reply_count';
 export const setTopicsCount50 = '.forum_pagesize_options > a:nth-child(2)';
 export const tooltip = 'data-tooltip-forum';
 export const topicLink = '.forum_topic_overlay';
-export const tooltipRegex = 'topic_hover_text';
 export const nextButton = '[rel=next]:not(.disabled)';
 export const pageLink = '.forum_paging_pagelink';
 export const pageLinkCurrent = `${pageLink}.active`;
