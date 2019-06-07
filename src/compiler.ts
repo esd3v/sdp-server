@@ -1,4 +1,4 @@
-import * as parser from './parser';
+import * as parser from './parser/index';
 
 export const compileTopic = (topic: Element): Topic => ({
   pinned: parser.isTopicPinned(topic),

@@ -3,7 +3,7 @@ import logger from 'koa-morgan';
 import Router from 'koa-router';
 import bodyParser from 'koa-better-body';
 import {compileTopics} from './compiler';
-import {getTopicList} from './scraper';
+import {scrapeTopics} from './scraper/index';
 import * as httpErrors from './httpErrors';
 import {
   PORT,
@@ -53,7 +53,7 @@ router.get('/', async ctx => {
 
   if (url !== cache.url) {
     try {
-      const topicList = await getTopicList({
+      const topicList = await scrapeTopics({
         testing: false,
         url,
       });

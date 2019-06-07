@@ -7,7 +7,7 @@ let topicList: Element[];
 let topicElement: Element;
 
 beforeAll(async () => {
-  topicList = await scraper.getTopicList({
+  topicList = await scraper.scrapeTopics({
     testing: true,
     url: config.TESTURL,
   });

@@ -15,13 +15,13 @@ interface TopicsCache {
   topics: Topic[];
 }
 
-interface GetHTML {
-  testing: boolean;
-  url: string;
-}
-
 type HTTPError = (ctx: any, params: {
   status?: number;
   code: number;
   title: string;
 }) => any;
+
+interface Viewport {
+  width: number;
+  height: number;
+}
