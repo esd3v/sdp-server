@@ -6,10 +6,30 @@ import {
   getAuthorElement,
   getTimestampElement,
   getReplyCountElement,
-  getLinkElement,
+  getTopicLinkElement,
+  getPageLinkElement,
+  getLastPageLinkElement,
+  getCurrentPageLinkElement,
 } from './elements';
 import {getAttributeContentFromParent} from './helpers';
 import {attributeContentHasNotBeenParsed} from './errors';
+
+export const getLastPageNumber = (container: Element) => {
+  const element = getLastPageLinkElement(container);
+  const parsed = parseInt(element.innerHTML, 10);
+
+  return parsed;
+};
+
+export const getCurrentPageNumber = (container: Element) => {
+  const element = getCurrentPageLinkElement(container);
+  const parsed = parseInt(element.innerHTML, 10);
+
+  return parsed;
+};
+
+export const hasPagination = (container: Element) =>
+  getPageLinkElement(container) && true;
 
 export const isTopicPinned = (topic: Element) =>
   topic.classList.contains(classes.sticky);
@@ -68,7 +88,7 @@ export const getTopicTooltip = (topic: Element) => {
 };
 
 export const getTopicLink = (topic: Element) => {
-  const element = getLinkElement(topic);
+  const element = getTopicLinkElement(topic);
   const text = getAttributeContentFromParent(element, 'href');
   const trimmed = trimWhitespace(text);
 

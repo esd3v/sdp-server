@@ -2,40 +2,12 @@ import puppeteer from 'puppeteer';
 import * as attributes from './selectors/attributes';
 import * as classes from './selectors/classes';
 import {browserConfig} from './config';
-import {getDocument} from './parser/helpers';
-import {getTopicElements} from './parser/elements';
-
-const hasPagination = (html: string) => {
-  const document = getDocument(html);
-  return (document.querySelector(classes.pageLink)) ? true : false;
-};
-
-// Get topics container, contains topic list and pagination
-const getContainerHTML = (html: string) => {
-  const document = getDocument(html);
-  const container = document.querySelector(classes.container);
-  if (container) {
-    return container.innerHTML;
-  } else {
-    throw new Error(`Element with selector '${classes.container}' doesn't exist`);
-  }
-};
-
-const innerHTMLToInt = (html: string, selector: string) => {
-  const document = getDocument(html);
-  const el = document.querySelector(selector);
-  if (el) {
-    return parseInt(el.innerHTML, 10);
-  } else {
-    throw new Error(`Element with selector '${selector}' doesn't exist`);
-  }
-};
-
-const getLastPageNumber = (html: string) =>
-  innerHTMLToInt(html, classes.pageLinkLast);
-
-const getCurrentPageNumber = (html: string) =>
-  innerHTMLToInt(html, classes.pageLinkCurrent);
+import {getTopicElements, getContainerElement} from './parser/elements';
+import {
+  hasPagination,
+  getLastPageNumber,
+  getCurrentPageNumber,
+} from './parser/parsers';
 
 export const getTopicList = async ({testing, url}: GetHTML) => {
   // Browser config
@@ -82,16 +54,18 @@ export const getTopicList = async ({testing, url}: GetHTML) => {
       await clickAndWait(classes.setTopicsCount50);
     }
 
-    const containerHTML = getContainerHTML(await getPageHTML());
+    const pageHTML = await getPageHTML();
+    const containerElement = getContainerElement(pageHTML);
+
     const pageCount =
-      testing ? 1 : hasPagination(containerHTML) ?
-      getLastPageNumber(containerHTML) : 1;
+      testing ? 1 : hasPagination(containerElement) ?
+      getLastPageNumber(containerElement) : 1;
     const currentPageNumber =
-      testing ? 1 : hasPagination(containerHTML) ?
-      getCurrentPageNumber(containerHTML) : 1;
+      testing ? 1 : hasPagination(containerElement) ?
+      getCurrentPageNumber(containerElement) : 1;
 
     for (let i = currentPageNumber; i <= pageCount; i++) {
-      topicList.push(...getTopicElements(await getPageHTML()));
+      topicList.push(...getTopicElements(containerElement));
       if (i !== pageCount) {
         await clickAndWait(attributes.nextButton);
       }
