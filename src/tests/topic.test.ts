@@ -1,7 +1,7 @@
 import {compileTopic} from '../compiler';
 import * as scraper from '../scraper';
 import * as config from '../config';
-import * as parser from '../parser/parsers';
+import * as parser from '../parser';
 
 let topicList: Element[];
 let topicElement: Element;

@@ -15,15 +15,15 @@ import {getAttributeContentFromParent} from './helpers';
 import {attributeContentHasNotBeenParsed} from './errors';
 
 export const getLastPageNumber = (container: Element) => {
-  const element = getLastPageLinkElement(container);
-  const parsed = parseInt(element.innerHTML, 10);
+  const parent = getLastPageLinkElement(container);
+  const parsed = parseInt(parent.innerHTML, 10);
 
   return parsed;
 };
 
 export const getCurrentPageNumber = (container: Element) => {
-  const element = getCurrentPageLinkElement(container);
-  const parsed = parseInt(element.innerHTML, 10);
+  const parent = getCurrentPageLinkElement(container);
+  const parsed = parseInt(parent.innerHTML, 10);
 
   return parsed;
 };
@@ -41,8 +41,8 @@ export const isTopicAnswered = (topic: Element) =>
   topic.querySelector(classes.answered) !== null;
 
 export const getTopicTitle = (topic: Element): string => {
-  const element = getTitleElement(topic);
-  const childNodes = element.childNodes;
+  const parent = getTitleElement(topic);
+  const childNodes = parent.childNodes;
   const textNode = childNodes[childNodes.length - 1] as Text;
   const text = textNode.data;
   const trimmed = trimWhitespace(text);
@@ -51,24 +51,24 @@ export const getTopicTitle = (topic: Element): string => {
 };
 
 export const getTopicAuthor = (topic: Element) => {
-  const element = getAuthorElement(topic);
-  const text = element.innerHTML;
+  const parent = getAuthorElement(topic);
+  const text = parent.innerHTML;
   const trimmed = trimWhitespace(text);
 
   return trimmed;
 };
 
 export const getTopicTimestamp = (topic: Element) => {
-  const element = getTimestampElement(topic);
-  const content = getAttributeContentFromParent(element, attributes.timestamp);
+  const parent = getTimestampElement(topic);
+  const content = getAttributeContentFromParent(parent, attributes.timestamp);
   const trimmed = parseInt(trimWhitespace(content), 10);
 
   return trimmed;
 };
 
 export const getTopicReplyCount = (topic: Element) => {
-  const element = getReplyCountElement(topic);
-  const textNode = element.childNodes[2] as Text;
+  const parent = getReplyCountElement(topic);
+  const textNode = parent.childNodes[2] as Text;
   const text = textNode.data;
   const trimmed = parseInt(trimWhitespace(text), 10);
 
@@ -76,9 +76,9 @@ export const getTopicReplyCount = (topic: Element) => {
 };
 
 export const getTopicTooltip = (topic: Element) => {
-  const content = getAttributeContentFromParent(topic, attributes.tooltip);
+  const parent = getAttributeContentFromParent(topic, attributes.tooltip);
   const regex = new RegExp(`(?<=<div class="topic_hover_text">).*?(?=<\/div)`, 'gs');
-  const match = content.match(regex);
+  const match = parent.match(regex);
 
   if (match) {
     return trimWhitespace(match[0]);
@@ -88,8 +88,8 @@ export const getTopicTooltip = (topic: Element) => {
 };
 
 export const getTopicLink = (topic: Element) => {
-  const element = getTopicLinkElement(topic);
-  const text = getAttributeContentFromParent(element, 'href');
+  const parent = getTopicLinkElement(topic);
+  const text = getAttributeContentFromParent(parent, 'href');
   const trimmed = trimWhitespace(text);
 
   return trimmed;
