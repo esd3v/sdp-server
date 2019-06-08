@@ -1,4 +1,4 @@
-import {PERPAGE} from './config';
+import {PERPAGE} from '../config';
 
 const HTTPError: HTTPError = (ctx, params) => {
   ctx.status = params.status;
