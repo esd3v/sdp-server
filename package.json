@@ -7,7 +7,7 @@
     "build": "webpack",
     "watch": "concurrently --kill-others \"tsc --watch\" \"nodemon dist/index.js\"",
     "lint": "./node_modules/.bin/tslint --project ./",
-    "test": "jest"
+    "test": "jest --forceExit"
   },
   "author": "",
   "license": "ISC",
