@@ -8,4 +8,7 @@ export const navigationTimeout = 35 * 1000;
 export const browserConfig: puppeteer.LaunchOptions = {
   headless: true,
   slowMo: 0,
+  args: [
+    '--no-sandbox',
+  ],
 };
