@@ -23,5 +23,5 @@ export const start = () => {
     .use(bodyParser())
     .use(headers)
     .use(router.routes())
-    .listen(config.PORT);
+    .listen(process.env.PORT || config.PORT, config.HOST);
 };
