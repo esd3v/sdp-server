@@ -5,6 +5,7 @@ import {scrapeTopics} from '../scraper/index';
 import {
   calculatePageCount,
   getItemsFromPage,
+  getMissingParameters,
   getDiscussionURL,
 } from '../misc';
 import {
@@ -18,7 +19,15 @@ import {
 } from './cache';
 
 const PARAMETERS = ['appID', 'page', 'perPage'];
+
 export const root = async (ctx: any) => {
+
+  const missingParameters = getMissingParameters(ctx.query, PARAMETERS);
+
+  if (missingParameters.length) {
+    return errors.missingParameters(ctx, missingParameters);
+  }
+
   const appID: number = parseInt(ctx.query[PARAMETERS[0]], 10);
   const page: number =  parseInt(ctx.query[PARAMETERS[1]], 10);
   const perPage: number =  parseInt(ctx.query[PARAMETERS[2]], 10);
@@ -27,9 +36,9 @@ export const root = async (ctx: any) => {
 
   const getPageTotal = () =>
     calculatePageCount({
-    perPage,
-    total: getCache().topics.length,
-  });
+      perPage,
+      total: getCache().topics.length,
+    });
 
   if (!validatePageNumber(page)) {
     return errors.pageIsNaN(ctx);

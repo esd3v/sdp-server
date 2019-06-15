@@ -14,5 +14,15 @@ export const getItemsFromPage = ({arr, page, perPage}: {
   return arr.slice(offset, offset + perPage);
 };
 
+export const getMissingParameters = (retrieved: string[], required: string[]) => {
+  let arr: string[] = [];
+  for (const param of required) {
+    if (!Object.keys(retrieved).includes(param)) {
+      arr.push(param);
+    }
+  }
+  return arr;
+};
+
 export const getDiscussionURL = (appID: number) =>
   `https://steamcommunity.com/app/${appID}/discussions/`;

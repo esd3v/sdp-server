@@ -33,3 +33,8 @@ export const incorrectPerPage = (ctx: any) => HTTPError500(ctx, {
   code: 4,
   title: `Incorrect 'perPage' number. Correct values: ${PERPAGE.toString()}`,
 });
+
+export const missingParameters = (ctx: any, params: string[]) => HTTPError500(ctx, {
+  code: 5,
+  title: `Missing required parameters: ${params.join(', ')}`,
+});
