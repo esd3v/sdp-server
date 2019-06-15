@@ -13,3 +13,6 @@ export const getItemsFromPage = ({arr, page, perPage}: {
   const offset = (page - 1) * perPage;
   return arr.slice(offset, offset + perPage);
 };
+
+export const getDiscussionURL = (appID: number) =>
+  `https://steamcommunity.com/app/${appID}/discussions/`;

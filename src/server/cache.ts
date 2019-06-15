@@ -1,5 +1,5 @@
 let cache: TopicsCache = {
-  url: '',
+  appID: 0,
   topics: [],
 };
 

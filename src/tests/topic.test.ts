@@ -1,7 +1,8 @@
-import {compileTopic} from '../compiler';
 import * as scraper from '../scraper';
 import * as config from '../config';
 import * as parser from '../parser';
+import {compileTopic} from '../compiler';
+import {getDiscussionURL} from '../misc';
 
 let topics: Element[];
 let topic: Element;
@@ -9,13 +10,13 @@ let topic: Element;
 beforeAll(async () => {
   topics = await scraper.scrapeTopics({
     testing: true,
-    url: config.TESTURL,
+    url: getDiscussionURL(config.TEST_APPID),
   });
   topic = topics[0];
 }, config.navigationTimeout);
 
 describe('Scrape, parse and compile topic element', () => {
-  test(`Topic list of ${config.TESTURL} has been retrieved`, () => {
+  test(`Topic list of AppID ${config.TEST_APPID} has been retrieved`, () => {
     const expected = topics.length > 0;
     expect(expected).toBeTruthy();
   });

@@ -5,6 +5,7 @@ import {scrapeTopics} from '../scraper/index';
 import {
   calculatePageCount,
   getItemsFromPage,
+  getDiscussionURL,
 } from '../misc';
 import {
   validatePageNumber,
@@ -16,12 +17,16 @@ import {
   setCache,
 } from './cache';
 
+const PARAMETERS = ['appID', 'page', 'perPage'];
 export const root = async (ctx: any) => {
-  const url = ctx.query.url;
-  const page =  parseInt(ctx.query.page, 10);
-  const perPage =  parseInt(ctx.query.perPage, 10);
+  const appID: number = parseInt(ctx.query[PARAMETERS[0]], 10);
+  const page: number =  parseInt(ctx.query[PARAMETERS[1]], 10);
+  const perPage: number =  parseInt(ctx.query[PARAMETERS[2]], 10);
 
-  const getPageTotal = () => calculatePageCount({
+  const discussionURL = getDiscussionURL(appID);
+
+  const getPageTotal = () =>
+    calculatePageCount({
     perPage,
     total: getCache().topics.length,
   });
@@ -32,16 +37,16 @@ export const root = async (ctx: any) => {
     return errors.incorrectPerPage(ctx);
   }
 
-  if (url !== getCache().url) {
+  if (appID !== getCache().appID) {
     try {
       const topics = await scrapeTopics({
         testing: false,
-        url,
+        url: discussionURL,
       });
       const compiledTopics = compileTopics(topics);
 
       setCache({
-        url,
+        appID,
         topics: compiledTopics,
       });
     } catch ({message}) {

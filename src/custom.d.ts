@@ -11,7 +11,7 @@ interface Topic {
 }
 
 interface TopicsCache {
-  url: string;
+  appID: number;
   topics: Topic[];
 }
 
