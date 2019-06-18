@@ -51,6 +51,7 @@ export const root = async (ctx: any) => {
       const topics = await scrapeTopics({
         testing: false,
         url: discussionURL,
+        ws: ctx.ws,
       });
       const compiledTopics = compileTopics(topics);
 

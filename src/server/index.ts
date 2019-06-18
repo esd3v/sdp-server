@@ -2,6 +2,7 @@ import Koa from 'koa';
 import logger from 'koa-morgan';
 import Router from 'koa-router';
 import bodyParser from 'koa-better-body';
+import {wss} from '../server/webSocket';
 import * as config from '../config';
 import * as routes from './routes';
 
@@ -16,6 +17,10 @@ const headers = async (ctx, next) => {
 };
 
 export const start = () => {
+  wss.on('connection', ws => {
+    server.context.ws = ws;
+  });
+
   router.get('/', routes.root);
 
   return server

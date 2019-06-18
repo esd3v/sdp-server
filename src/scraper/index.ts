@@ -21,6 +21,7 @@ import {
 export const scrapeTopics = async (options: {
   url: string;
   testing: boolean;
+  ws: WebSocket;
 }): Promise<Element[]> => {
   const browser = await createBrowser(browserConfig);
   const page = await createPage(browser, {
@@ -31,6 +32,7 @@ export const scrapeTopics = async (options: {
     },
     defaultNavigationTimeout: config.navigationTimeout,
   });
+  const ws = options.ws;
 
   try {
     const topics: Element[] = [];
@@ -57,6 +59,7 @@ export const scrapeTopics = async (options: {
           getCurrentPageNumber(containerElement) : 1;
 
     for (let i = currentPageNumber; i <= pageCount; i++) {
+      ws.send(`Scraping page ${i} / ${pageCount}`);
       const containerElement = getContainerElement(await getPageHTML(page));
       const elements = getTopicElements(containerElement);
 
