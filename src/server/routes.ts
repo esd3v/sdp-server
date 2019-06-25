@@ -71,6 +71,7 @@ export const root = async (ctx: any) => {
 
   const content = {
     pageTotal: getPageTotal(),
+    topicTotal: getCache().topics.length,
     topics: getItemsFromPage({
       arr: getCache().topics,
       page,
