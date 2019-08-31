@@ -1,4 +1,4 @@
-import * as errors from './errors';
+import * as errors from '../server/errors';
 import * as config from '../config';
 import {compileTopics} from '../compiler';
 import {scrapeTopics} from '../scraper/index';
@@ -12,11 +12,11 @@ import {
   validatePageNumber,
   validatePerPageNumber,
   validatePageRange,
-} from './validations';
+} from '../server/validations';
 import {
   getCache,
   setCache,
-} from './cache';
+} from '../server/cache';
 
 const PARAMETERS = ['appID', 'page', 'perPage'];
 
