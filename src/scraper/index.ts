@@ -23,6 +23,9 @@ export const scrapeTopics = async (options: {
   testing: boolean;
   ws: WebSocket;
 }): Promise<Element[]> => {
+  const ws = options.ws;
+
+  ws.send(`Preparing to scrape ${options.url}`);
   const browser = await createBrowser(browserConfig);
   const page = await createPage(browser, {
     url: options.url,
@@ -32,7 +35,6 @@ export const scrapeTopics = async (options: {
     },
     defaultNavigationTimeout: config.navigationTimeout,
   });
-  const ws = options.ws;
 
   try {
     const topics: Element[] = [];

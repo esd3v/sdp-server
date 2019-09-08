@@ -53,6 +53,8 @@ export const root = async (ctx: any) => {
         url: discussionURL,
         ws: ctx.ws,
       });
+
+      ctx.ws.send('Parsing scraped topics...');
       const compiledTopics = compileTopics(topics);
 
       setCache({
@@ -79,5 +81,6 @@ export const root = async (ctx: any) => {
     }),
   };
 
+  ctx.ws.send('Done');
   return ctx.body = content;
 };
