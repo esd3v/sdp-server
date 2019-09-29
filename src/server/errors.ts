@@ -44,3 +44,9 @@ export const missingParameters = (ctx: any, params: string[]) =>
     code: 5,
     title: `Missing required parameters: ${params.join(', ')}`,
   });
+
+export const parseError = (ctx: any, title: string) =>
+  HTTPError500(ctx, {
+    code: 7,
+    title,
+  });

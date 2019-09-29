@@ -1,5 +1,6 @@
 import * as classes from '../selectors/classes';
 import * as attributes from '../selectors/attributes';
+import * as errors from './errors';
 import {trimWhitespace} from '../misc';
 import {
   getTitleElement,
@@ -12,7 +13,6 @@ import {
   getCurrentPageLinkElement,
 } from './elements';
 import {getAttributeContentFromParent} from './helpers';
-import {attributeContentHasNotBeenParsed} from './errors';
 
 export const getLastPageNumber = (container: Element) => {
   const parent = getLastPageLinkElement(container);
@@ -83,7 +83,7 @@ export const getTopicTooltip = (topic: Element) => {
   if (match) {
     return trimWhitespace(match[0]);
   } else {
-    throw new Error(attributeContentHasNotBeenParsed(attributes.tooltip));
+    throw errors.attributeContentHasNotBeenParsed(attributes.tooltip);
   }
 };
 

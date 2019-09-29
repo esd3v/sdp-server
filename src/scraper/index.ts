@@ -1,7 +1,9 @@
 import * as attributes from '../selectors/attributes';
 import * as classes from '../selectors/classes';
 import * as config from '../config';
+import * as errors from './errors';
 import {browserConfig} from '../config';
+import {getDiscussionURL} from '../misc';
 import {
   getTopicElements,
   getContainerElement,
@@ -19,22 +21,27 @@ import {
 } from './helpers';
 
 export const scrapeTopics = async (options: {
-  url: string;
+  appID: number;
   testing: boolean;
   ws: WebSocket;
 }): Promise<Element[]> => {
   const ws = options.ws;
+  const discussionURL = getDiscussionURL(options.appID);
 
-  ws.send(`Preparing to scrape ${options.url}`);
+  ws.send(`Preparing to scrape ${discussionURL}`);
   const browser = await createBrowser(browserConfig);
   const page = await createPage(browser, {
-    url: options.url,
+    url: discussionURL,
     viewport: {
       width: 1280,
       height: 720,
     },
     defaultNavigationTimeout: config.navigationTimeout,
   });
+
+  if (page.url() === `${config.URL_HOME}/`) {
+    throw errors.appDoesntExist(options.appID);
+  }
 
   try {
     const topics: Element[] = [];

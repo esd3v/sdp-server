@@ -1,7 +1,5 @@
 import puppeteer from 'puppeteer';
-import {
-  couldntClick,
-} from './errors';
+import * as errors from './errors';
 
 export const getPageHTML = (page: puppeteer.Page) =>
   page.evaluate(() => document.documentElement.innerHTML);
@@ -33,6 +31,6 @@ export const clickAndWaitForNavigation = async (page: puppeteer.Page, selector: 
       page.click(selector),
     ]);
   } catch (err) {
-    throw new Error(couldntClick(selector, err));
+    throw errors.couldntClick(selector, err), selector;
   }
 };

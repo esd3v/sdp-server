@@ -1,6 +1,14 @@
 import {JSDOM} from 'jsdom';
 import * as errors from './errors';
 
+export class ElementError extends Error {
+  constructor(message: string, public selector?: string) {
+    super(message);
+    this.name = this.constructor.name;
+    this.selector = selector;
+  }
+}
+
 export const getDocument = (html: string) =>
   (new JSDOM(html)).window.document;
 
@@ -10,7 +18,7 @@ export const getElementFromParent = (parent: Document | Element, selector: strin
   if (element) {
     return element;
   } else {
-    throw new Error(errors.elementDoesntExist(selector));
+    throw errors.elementDoesntExist(selector);
   }
 };
 
@@ -21,7 +29,7 @@ export const getElementsFromParent = (parent: Document | Element, selector: stri
   if (elements.length) {
     return converted;
   } else {
-    throw new Error(errors.elementsDontExist(selector));
+    throw errors.elementsDontExist(selector);
   }
 };
 
@@ -45,6 +53,6 @@ export const getAttributeContentFromParent = (parent: Element, attribute: string
   if (content) {
     return content;
   } else {
-    throw new Error(errors.attributeDoesntExist(attribute));
+    throw errors.attributeDoesntExist(attribute);
   }
 };

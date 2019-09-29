@@ -1,12 +1,12 @@
 import * as errors from '../server/errors';
 import * as config from '../config';
 import {compileTopics} from '../compiler';
+import {ElementError} from '../parser/helpers';
 import {scrapeTopics} from '../scraper/index';
 import {
   calculatePageCount,
   getItemsFromPage,
   getMissingParameters,
-  getDiscussionURL,
 } from '../misc';
 import {
   validatePageNumber,
@@ -32,8 +32,6 @@ export const root = async (ctx: any) => {
   const page: number =  parseInt(ctx.query[PARAMETERS[1]], 10);
   const perPage: number =  parseInt(ctx.query[PARAMETERS[2]], 10);
 
-  const discussionURL = getDiscussionURL(appID);
-
   const getPageTotal = () =>
     calculatePageCount({
       perPage,
@@ -50,7 +48,7 @@ export const root = async (ctx: any) => {
     try {
       const topics = await scrapeTopics({
         testing: false,
-        url: discussionURL,
+        appID,
         ws: ctx.ws,
       });
 
@@ -61,9 +59,11 @@ export const root = async (ctx: any) => {
         appID,
         topics: compiledTopics,
       });
-    } catch ({message}) {
-      console.error(message);
-      return errors.invalidPage(ctx);
+    } catch (err) {
+      console.error(`Error: ${err.message}`);
+      return (err instanceof ElementError) ?
+        errors.parseError(ctx, err.message) :
+        errors.invalidPage(ctx);
     }
   }
 

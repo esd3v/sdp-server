@@ -1,3 +1,5 @@
+import {URL_DISCUSSION} from './config';
+
 export const trimWhitespace = (str: string) => str.replace(/\s+/g, ' ').trim();
 
 export const calculatePageCount = ({perPage, total}: {
@@ -25,4 +27,4 @@ export const getMissingParameters = (retrieved: string[], required: string[]) =>
 };
 
 export const getDiscussionURL = (appID: number) =>
-  `https://steamcommunity.com/app/${appID}/discussions/`;
+  `${URL_DISCUSSION}/app/${appID}/discussions/`;
