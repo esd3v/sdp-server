@@ -15,12 +15,6 @@ interface TopicsCache {
   topics: Topic[];
 }
 
-type HTTPError = (ctx: any, params: {
-  status?: number;
-  code: number;
-  title: string;
-}) => any;
-
 interface Viewport {
   width: number;
   height: number;

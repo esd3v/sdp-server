@@ -1,52 +1,53 @@
 import {PERPAGE} from '../config';
 
-const HTTPError: HTTPError = (ctx, params) => {
-  ctx.status = params.status;
-  ctx.body = {
-    code: params.code,
-    title: params.title,
-  };
+const HTTPError = (ctx: any, status: number, params: {
+  [key in string]: any;
+}) => {
+  ctx.status = status;
+  ctx.body = params;
   return ctx;
 };
 
-const HTTPError500: HTTPError = (ctx, params) =>
-  HTTPError(ctx, {
-    ...params,
-    status: 500,
-  });
+const createError = (ctx: any, status: number, {code, message}: {
+  code: number;
+  message: string;
+}) => HTTPError(ctx, status, {
+  code,
+  message,
+});
 
 export const pageIsNaN = (ctx: any) =>
-  HTTPError500(ctx, {
+  createError(ctx, 500, {
     code: 1,
-    title: 'Page is not a number',
+    message: 'Page is not a number',
   });
 
 export const noSuchPage = (ctx: any) =>
-  HTTPError500(ctx, {
+  createError(ctx, 500, {
     code: 2,
-    title: 'No such page',
+    message: 'No such page',
   });
 
 export const invalidPage = (ctx: any) =>
-  HTTPError500(ctx, {
+  createError(ctx, 500, {
     code: 3,
-    title: `Couldn't parse the page`,
+    message: `Couldn't parse the page`,
   });
 
 export const incorrectPerPage = (ctx: any) =>
-  HTTPError500(ctx, {
+  createError(ctx, 500, {
     code: 4,
-    title: `Incorrect 'perPage' number. Correct values: ${PERPAGE.toString()}`,
+    message: `Incorrect 'perPage' number. Correct values: ${PERPAGE.toString()}`,
   });
 
 export const missingParameters = (ctx: any, params: string[]) =>
-  HTTPError500(ctx, {
+  createError(ctx, 500, {
     code: 5,
-    title: `Missing required parameters: ${params.join(', ')}`,
+    message: `Missing required parameters: ${params.join(', ')}`,
   });
 
-export const parseError = (ctx: any, title: string) =>
-  HTTPError500(ctx, {
+export const parseError = (ctx: any, message: string) =>
+  createError(ctx, 500, {
     code: 7,
-    title,
+    message,
   });
