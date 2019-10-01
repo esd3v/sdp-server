@@ -2,7 +2,6 @@ import * as scraper from '../scraper';
 import * as config from '../config';
 import * as parser from '../parser';
 import {compileTopic} from '../compiler';
-import {getDiscussionURL} from '../misc';
 
 let topics: Element[];
 let topic: Element;
@@ -10,7 +9,7 @@ let topic: Element;
 beforeAll(async () => {
   topics = await scraper.scrapeTopics({
     testing: true,
-    url: getDiscussionURL(config.TEST_APPID),
+    appID: config.TEST_APPID,
   });
   topic = topics[0];
 }, config.navigationTimeout);
