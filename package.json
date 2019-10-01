@@ -18,7 +18,7 @@
   "dependencies": {
     "fs-extra": "8.0.1",
     "jsdom": "15.1.1",
-    "koa": "2.7.0",
+    "koa": "2.8.2",
     "koa-better-body": "3.0.4",
     "koa-morgan": "1.0.1",
     "koa-router": "7.4.0",
