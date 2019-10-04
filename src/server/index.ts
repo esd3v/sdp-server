@@ -4,7 +4,7 @@ import Router from 'koa-router';
 import bodyParser from 'koa-better-body';
 import {wss} from '../server/webSocket';
 import * as config from '../config';
-import * as routes from '../routes';
+import * as routes from './routes';
 
 const server = new Koa();
 const router = new Router();

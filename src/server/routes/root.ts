@@ -1,22 +1,22 @@
-import * as errors from '../server/errors';
-import * as config from '../config';
-import {compileTopics} from '../compiler';
-import {ElementError} from '../parser/helpers';
-import {scrapeTopics} from '../scraper/index';
+import * as errors from '../errors';
+import * as config from '../../config';
+import {compileTopics} from '../../compiler';
+import {ElementError} from '../../parser/helpers';
+import {scrapeTopics} from '../../scraper/index';
 import {
   calculatePageCount,
   getItemsFromPage,
   getMissingParameters,
-} from '../misc';
+} from '../../misc';
 import {
   validatePageNumber,
   validatePerPageNumber,
   validatePageRange,
-} from '../server/validations';
+} from '../validations';
 import {
   getCache,
   setCache,
-} from '../server/cache';
+} from '../cache';
 
 const PARAMETERS = ['appID', 'page', 'perPage'];
 
