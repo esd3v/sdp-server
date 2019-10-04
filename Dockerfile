@@ -1,4 +1,4 @@
-FROM node:12.0.0
+FROM node:12.8.1
 
 # Install dependencies for headless chromium
 RUN apt-get update && \
