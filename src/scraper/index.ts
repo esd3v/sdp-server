@@ -7,7 +7,7 @@ import {getDiscussionURL} from '../misc';
 import {
   getTopicElements,
   getContainerElement,
-} from '../parser/elements';
+} from '../parser';
 import {
   hasPagination,
   getLastPageNumber,

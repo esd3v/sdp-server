@@ -1,35 +1,58 @@
 import * as classes from '../selectors/classes';
 import * as attributes from '../selectors/attributes';
 import * as errors from './errors';
+import * as helpers from './helpers';
 import {trimWhitespace} from '../misc';
-import {
-  getTitleElement,
-  getAuthorElement,
-  getTimestampElement,
-  getReplyCountElement,
-  getTopicLinkElement,
-  getPageLinkElement,
-  getLastPageLinkElement,
-  getCurrentPageLinkElement,
-} from './elements';
-import {getAttributeContentFromParent} from './helpers';
+
+export const getContainerElement = (html: string) => {
+  const element = helpers.getElementFromHTML(html, classes.container);
+
+  if (element) {
+    return element;
+  } else {
+    throw errors.elementDoesntExist(classes.container);
+  }
+};
+
+export const getTopicElements = (container: Element) => {
+  const elements = helpers.getElementsFromParent(container, classes.topic);
+
+  if (elements.length) {
+    return elements;
+  } else {
+    throw errors.elementDoesntExist(classes.topic);
+  }
+};
 
 export const getLastPageNumber = (container: Element) => {
-  const parent = getLastPageLinkElement(container);
-  const parsed = parseInt(parent.innerHTML, 10);
+  const element = helpers.getElementFromParent(container, classes.pageLinkLast);
 
-  return parsed;
+  if (element) {
+    return parseInt(element.innerHTML, 10);
+  } else {
+    throw errors.elementDoesntExist(classes.pageLinkLast);
+  }
 };
 
 export const getCurrentPageNumber = (container: Element) => {
-  const parent = getCurrentPageLinkElement(container);
-  const parsed = parseInt(parent.innerHTML, 10);
+  const element = helpers.getElementFromParent(container, classes.pageLinkCurrent);
 
-  return parsed;
+  if (element) {
+    return parseInt(element.innerHTML, 10);
+  } else {
+    throw errors.elementDoesntExist(classes.pageLinkCurrent);
+  }
 };
 
-export const hasPagination = (container: Element) =>
-  getPageLinkElement(container) && true;
+export const hasPagination = (container: Element) => {
+  const element = helpers.getElementFromParent(container, classes.pageLink);
+
+  if (element) {
+    return true;
+  } else {
+    throw errors.elementDoesntExist(classes.pageLink);
+  }
+};
 
 export const isTopicPinned = (topic: Element) =>
   topic.classList.contains(classes.sticky);
@@ -41,56 +64,89 @@ export const isTopicAnswered = (topic: Element) =>
   topic.querySelector(classes.answered) !== null;
 
 export const getTopicTitle = (topic: Element): string => {
-  const parent = getTitleElement(topic);
-  const childNodes = parent.childNodes;
-  const textNode = childNodes[childNodes.length - 1] as Text;
-  const text = textNode.data;
-  const trimmed = trimWhitespace(text);
+  const element = helpers.getElementFromParent(topic, classes.title);
 
-  return trimmed;
+  if (element) {
+    const childNodes = element.childNodes;
+    const textNode = childNodes[childNodes.length - 1] as Text;
+    const text = textNode.data;
+    const trimmed = trimWhitespace(text);
+    return trimmed;
+  } else {
+    throw errors.elementDoesntExist(classes.title);
+  }
 };
 
 export const getTopicAuthor = (topic: Element) => {
-  const parent = getAuthorElement(topic);
-  const text = parent.innerHTML;
-  const trimmed = trimWhitespace(text);
+  const element = helpers.getElementFromParent(topic, classes.author);
 
-  return trimmed;
+  if (element) {
+    const text = element.innerHTML;
+    const trimmed = trimWhitespace(text);
+    return trimmed;
+  } else {
+    throw errors.elementDoesntExist(classes.author);
+  }
 };
 
 export const getTopicTimestamp = (topic: Element) => {
-  const parent = getTimestampElement(topic);
-  const content = getAttributeContentFromParent(parent, attributes.timestamp);
-  const trimmed = parseInt(trimWhitespace(content), 10);
+  const element = helpers.getElementFromParent(topic, `[${attributes.timestamp}]`);
 
-  return trimmed;
+  if (element) {
+    const content = helpers.getAttributeContentFromParent(element, attributes.timestamp);
+
+    if (content) {
+      return parseInt(trimWhitespace(content), 10);
+    } else {
+      throw errors.attributeDoesntExist(attributes.timestamp);
+    }
+  } else {
+    throw errors.elementDoesntExist(`[${attributes.timestamp}]`);
+  }
 };
 
 export const getTopicReplyCount = (topic: Element) => {
-  const parent = getReplyCountElement(topic);
-  const textNode = parent.childNodes[2] as Text;
-  const text = textNode.data;
-  const trimmed = parseInt(trimWhitespace(text), 10);
+  const element = helpers.getElementFromParent(topic, classes.replycount);
 
-  return trimmed;
+  if (element) {
+    const textNode = element.childNodes[2] as Text;
+    const text = textNode.data;
+    const trimmed = parseInt(trimWhitespace(text), 10);
+    return trimmed;
+  } else {
+    throw errors.elementDoesntExist(classes.replycount);
+  }
 };
 
 export const getTopicTooltip = (topic: Element) => {
-  const parent = getAttributeContentFromParent(topic, attributes.tooltip);
-  const regex = new RegExp(`(?<=<div class="topic_hover_text">).*?(?=<\/div)`, 'gs');
-  const match = parent.match(regex);
+  const content = helpers.getAttributeContentFromParent(topic, attributes.tooltip);
 
-  if (match) {
-    return trimWhitespace(match[0]);
+  if (content) {
+    const regex = new RegExp(`(?<=<div class="topic_hover_text">).*?(?=<\/div)`, 'gs');
+    const match = content.match(regex);
+
+    if (match) {
+      return trimWhitespace(match[0]);
+    } else {
+      throw errors.attributeContentHasNotBeenParsed(attributes.tooltip);
+    }
   } else {
-    throw errors.attributeContentHasNotBeenParsed(attributes.tooltip);
+    throw errors.attributeDoesntExist(attributes.tooltip);
   }
 };
 
 export const getTopicLink = (topic: Element) => {
-  const parent = getTopicLinkElement(topic);
-  const text = getAttributeContentFromParent(parent, 'href');
-  const trimmed = trimWhitespace(text);
+  const element = helpers.getElementFromParent(topic, classes.topicLink);
 
-  return trimmed;
+  if (element) {
+    const text = helpers.getAttributeContentFromParent(element, 'href');
+
+    if (text) {
+      return trimWhitespace(text);
+    } else {
+      throw errors.attributeDoesntExist('href');
+    }
+  } else {
+    throw errors.elementDoesntExist(classes.topicLink);
+  }
 };
