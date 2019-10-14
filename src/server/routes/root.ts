@@ -9,8 +9,10 @@ import {
   getMissingParameters,
 } from '../../misc';
 import {
+  validateAppID,
   validatePageNumber,
   validatePerPageNumber,
+  validateAllowedPerPageNumber,
   validatePageRange,
 } from '../validations';
 import {
@@ -28,9 +30,9 @@ export const root = async (ctx: any) => {
     return errors.missingParameters(ctx, missingParameters);
   }
 
-  const appID: number = parseInt(ctx.query[PARAMETERS[0]], 10);
-  const page: number =  parseInt(ctx.query[PARAMETERS[1]], 10);
-  const perPage: number =  parseInt(ctx.query[PARAMETERS[2]], 10);
+  const appID = ctx.query[PARAMETERS[0]] * 1;
+  const page = ctx.query[PARAMETERS[1]] * 1;
+  const perPage = ctx.query[PARAMETERS[2]] * 1;
 
   const getPageTotal = () =>
     calculatePageCount({
@@ -38,9 +40,13 @@ export const root = async (ctx: any) => {
       total: getCache().topics.length,
     });
 
-  if (!validatePageNumber(page)) {
-    return errors.pageIsNaN(ctx);
-  } else if (!validatePerPageNumber(perPage, config.PERPAGE)) {
+  if (!validateAppID(appID)) {
+    return errors.appIDIsNotInteger(ctx);
+  } else if (!validatePageNumber(page)) {
+    return errors.pageIsNotInteger(ctx);
+  } else if (!validatePerPageNumber(perPage)) {
+    return errors.perPageIsNotInteger(ctx);
+  } else if (!validateAllowedPerPageNumber(perPage, config.PERPAGE)) {
     return errors.incorrectPerPage(ctx);
   }
 
