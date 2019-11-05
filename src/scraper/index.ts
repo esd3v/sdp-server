@@ -54,7 +54,9 @@ export const scrapeTopics = async (options: {
       // Go to the first page
       await clickAndWaitForNavigation(page, classes.pageLinkFirst);
 
-      // Set max topics per page
+      // Set perPage 50 for fast scraping.
+      // For some reason steam page has less total topics with perPage 50, than perPage 15,
+      // so it's not a bug if the server scrapes a bit less topics
       await clickAndWaitForNavigation(page, classes.setTopicsCount50);
     }
 
