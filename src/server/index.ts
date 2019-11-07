@@ -1,32 +1,34 @@
-import Koa from 'koa';
-import logger from 'koa-morgan';
-import Router from 'koa-router';
-import bodyParser from 'koa-better-body';
-import {wss} from '../server/webSocket';
+import express from 'express';
+import http from 'http';
+import morgan from 'morgan';
+import {createSocket} from './webSocket';
 import * as config from '../config';
 import * as routes from './routes';
 
-const server = new Koa();
-const router = new Router();
-
-const headers = async (ctx, next) => {
-  ctx.set({
+const headers = (req, res, next) => {
+  res.set({
     'Access-Control-Allow-Origin': '*',
   });
-  await next();
+  return next();
 };
 
 export const start = () => {
-  wss.on('connection', ws => {
-    server.context.ws = ws;
-  });
 
-  router.get('/', routes.root);
+  const app = express();
+  const port = process.env.PORT || config.PORT;
+  const server = http.createServer(app);
+  const wss = createSocket(server);
 
-  return server
-    .use(logger('tiny'))
-    .use(bodyParser())
+  app
+    .use(morgan('dev'))
     .use(headers)
-    .use(router.routes())
-    .listen(process.env.PORT || config.PORT, config.HOST);
+    .get('/', routes.root);
+
+  server.listen(port, () =>
+    console.log(`Server listening at: ${port}`));
+
+  wss.on('connection', ws => {
+    app.ws = ws;
+    console.log('ws has been injected');
+  });
 };

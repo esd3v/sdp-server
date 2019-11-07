@@ -22,17 +22,19 @@ import {
 
 const PARAMETERS = ['appID', 'page', 'perPage'];
 
-export const root = async (ctx: any) => {
+export const root = async (req, res) => {
 
-  const missingParameters = getMissingParameters(ctx.query, PARAMETERS);
+  const ws = req.app.ws;
+
+  const missingParameters = getMissingParameters(req.query, PARAMETERS);
 
   if (missingParameters.length) {
-    return errors.missingParameters(ctx, missingParameters);
+    return errors.missingParameters(res, missingParameters);
   }
 
-  const appID = ctx.query[PARAMETERS[0]] * 1;
-  const page = ctx.query[PARAMETERS[1]] * 1;
-  const perPage = ctx.query[PARAMETERS[2]] * 1;
+  const appID = req.query[PARAMETERS[0]] * 1;
+  const page = req.query[PARAMETERS[1]] * 1;
+  const perPage = req.query[PARAMETERS[2]] * 1;
 
   const getPageTotal = () =>
     calculatePageCount({
@@ -41,13 +43,13 @@ export const root = async (ctx: any) => {
     });
 
   if (!validateAppID(appID)) {
-    return errors.appIDIsNotInteger(ctx);
+    return errors.appIDIsNotInteger(res);
   } else if (!validatePageNumber(page)) {
-    return errors.pageIsNotInteger(ctx);
+    return errors.pageIsNotInteger(res);
   } else if (!validatePerPageNumber(perPage)) {
-    return errors.perPageIsNotInteger(ctx);
+    return errors.perPageIsNotInteger(res);
   } else if (!validateAllowedPerPageNumber(perPage, config.PERPAGE)) {
-    return errors.incorrectPerPage(ctx);
+    return errors.incorrectPerPage(res);
   }
 
   if (appID !== getCache().appID) {
@@ -55,11 +57,11 @@ export const root = async (ctx: any) => {
       const topics = await scrapeTopics({
         testing: false,
         appID,
-        ws: ctx.ws,
+        ws,
       });
 
-      if (ctx.ws) {
-        ctx.ws.send('Parsing scraped topics...');
+      if (ws) {
+        ws.send('Parsing scraped topics...');
       }
       const compiledTopics = compileTopics(topics);
 
@@ -70,13 +72,13 @@ export const root = async (ctx: any) => {
     } catch (err) {
       console.error(`Error: ${err.message}`);
       return (err instanceof ElementError) ?
-        errors.parseError(ctx, err.message) :
-        errors.invalidPage(ctx);
+        errors.parseError(res, err.message) :
+        errors.invalidPage(res);
     }
   }
 
   if (!validatePageRange(page, getPageTotal())) {
-    return errors.noSuchPage(ctx);
+    return errors.noSuchPage(res);
   }
 
   const content = {
@@ -89,9 +91,9 @@ export const root = async (ctx: any) => {
     }),
   };
 
-  if (ctx.ws) {
-    ctx.ws.send('Done');
+  if (ws) {
+    ws.send('Done');
   }
 
-  return ctx.body = content;
+  return res.send(content);
 };
