@@ -63,12 +63,17 @@ export const root = async (req, res) => {
       if (ws) {
         ws.send('Parsing scraped topics...');
       }
+
       const compiledTopics = compileTopics(topics);
 
       setCache({
         appID,
         topics: compiledTopics,
       });
+
+      if (ws) {
+        ws.send('Done');
+      }
     } catch (err) {
       console.error(`Error: ${err.message}`);
       return (err instanceof ElementError) ?
@@ -90,10 +95,6 @@ export const root = async (req, res) => {
       perPage,
     }),
   };
-
-  if (ws) {
-    ws.send('Done');
-  }
 
   return res.send(content);
 };
