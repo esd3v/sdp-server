@@ -17,7 +17,8 @@ export const getItemsFromPage = ({arr, page, perPage}: {
 };
 
 export const getMissingParameters = (retrieved: string[], required: string[]) => {
-  let arr: string[] = [];
+  const arr: string[] = [];
+
   for (const param of required) {
     if (!Object.keys(retrieved).includes(param)) {
       arr.push(param);

@@ -1,9 +1,9 @@
 module.exports = {
   "roots": [
-    "<rootDir>/src"
+    "<rootDir>/src",
   ],
   "transform": {
-    "^.+\\.tsx?$": "ts-jest"
+    "^.+\\.tsx?$": "ts-jest",
   },
   "verbose": true,
   "testRegex": "(/tests/.*(\.)(test|spec))\\.tsx?$",
@@ -13,6 +13,6 @@ module.exports = {
     "js",
     "jsx",
     "json",
-    "node"
+    "node",
   ],
 };
