@@ -15,7 +15,7 @@ export const getContainerElement = (html: string) => {
 };
 
 export const getTopicElements = (container: Element) => {
-  const elements = helpers.getElementsFromParent(container, classes.topic);
+  const elements = [...container.querySelectorAll(classes.topic)];
 
   if (elements.length) {
     return elements;
@@ -25,7 +25,7 @@ export const getTopicElements = (container: Element) => {
 };
 
 export const getLastPageNumber = (container: Element) => {
-  const element = helpers.getElementFromParent(container, classes.pageLinkLast);
+  const element = container.querySelector(classes.pageLinkLast);
 
   if (element) {
     return parseInt(element.innerHTML, 10);
@@ -35,7 +35,7 @@ export const getLastPageNumber = (container: Element) => {
 };
 
 export const getCurrentPageNumber = (container: Element) => {
-  const element = helpers.getElementFromParent(container, classes.pageLinkCurrent);
+  const element = container.querySelector(classes.pageLinkCurrent);
 
   if (element) {
     return parseInt(element.innerHTML, 10);
@@ -45,7 +45,7 @@ export const getCurrentPageNumber = (container: Element) => {
 };
 
 export const hasPagination = (container: Element) => {
-  const element = helpers.getElementFromParent(container, classes.pageLink);
+  const element = container.querySelector(classes.pageLink);
 
   if (element) {
     return true;
@@ -64,7 +64,7 @@ export const isTopicAnswered = (topic: Element) =>
   topic.querySelector(classes.answered) !== null;
 
 export const getTopicTitle = (topic: Element): string => {
-  const element = helpers.getElementFromParent(topic, classes.title);
+  const element = topic.querySelector(classes.title);
 
   if (element) {
     const childNodes = element.childNodes;
@@ -78,7 +78,7 @@ export const getTopicTitle = (topic: Element): string => {
 };
 
 export const getTopicAuthor = (topic: Element) => {
-  const element = helpers.getElementFromParent(topic, classes.author);
+  const element = topic.querySelector(classes.author);
 
   if (element) {
     const text = element.innerHTML;
@@ -90,10 +90,10 @@ export const getTopicAuthor = (topic: Element) => {
 };
 
 export const getTopicTimestamp = (topic: Element) => {
-  const element = helpers.getElementFromParent(topic, `[${attributes.timestamp}]`);
+  const element = topic.querySelector(`[${attributes.timestamp}]`);
 
   if (element) {
-    const content = helpers.getAttributeContentFromParent(element, attributes.timestamp);
+    const content = element.getAttribute(attributes.timestamp);
 
     if (content) {
       return parseInt(trimWhitespace(content), 10);
@@ -106,7 +106,7 @@ export const getTopicTimestamp = (topic: Element) => {
 };
 
 export const getTopicReplyCount = (topic: Element) => {
-  const element = helpers.getElementFromParent(topic, classes.replycount);
+  const element = topic.querySelector(classes.replycount);
 
   if (element) {
     const textNode = element.childNodes[2] as Text;
@@ -119,7 +119,7 @@ export const getTopicReplyCount = (topic: Element) => {
 };
 
 export const getTopicTooltip = (topic: Element) => {
-  const content = helpers.getAttributeContentFromParent(topic, attributes.tooltip);
+  const content = topic.getAttribute(attributes.tooltip);
 
   if (content) {
     const regex = new RegExp(`(?<=<div class="topic_hover_text">).*?(?=<\/div)`, 'gs');
@@ -136,10 +136,10 @@ export const getTopicTooltip = (topic: Element) => {
 };
 
 export const getTopicLink = (topic: Element) => {
-  const element = helpers.getElementFromParent(topic, classes.topicLink);
+  const element = topic.querySelector(classes.topicLink);
 
   if (element) {
-    const text = helpers.getAttributeContentFromParent(element, 'href');
+    const text = element.getAttribute('href');
 
     if (text) {
       return trimWhitespace(text);
