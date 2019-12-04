@@ -2,7 +2,7 @@ import * as errors from '../errors';
 import * as config from '../../config';
 import {compileTopics} from '../../compiler';
 import {ElementError} from '../../parser/helpers';
-import {scrapeTopics} from '../../scraper/index';
+import {scrapeDiscussion} from '../../scraper/index';
 import {
   calculatePageCount,
   getItemsFromPage,
@@ -54,7 +54,7 @@ export const root = async (req, res) => {
 
   if (appID !== getCache().appID) {
     try {
-      const topics = await scrapeTopics({
+      const {topics, appTitle} = await scrapeDiscussion({
         testing: false,
         appID,
         ws,
@@ -68,6 +68,7 @@ export const root = async (req, res) => {
 
       setCache({
         appID,
+        appTitle,
         topics: compiledTopics,
       });
 
@@ -87,6 +88,7 @@ export const root = async (req, res) => {
   }
 
   const content = {
+    appTitle: getCache().appTitle,
     pageTotal: getPageTotal(),
     topicTotal: getCache().topics.length,
     topics: getItemsFromPage({

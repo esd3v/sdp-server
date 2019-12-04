@@ -6,6 +6,7 @@ import {browserConfig} from '../config';
 import {getDiscussionURL} from '../misc';
 import {
   getTopicElements,
+  getAppTitle,
   getContainerElement,
 } from '../parser';
 import {
@@ -20,11 +21,16 @@ import {
   clickAndWaitForNavigation,
 } from './helpers';
 
-export const scrapeTopics = async (options: {
+interface ScrapedData {
+  appTitle: string;
+  topics: Element[];
+}
+
+export const scrapeDiscussion = async (options: {
   appID: number;
   testing: boolean;
   ws?: WebSocket;
-}): Promise<Element[]> => {
+}): Promise<ScrapedData> => {
   const ws = options.ws;
   const discussionURL = getDiscussionURL(options.appID);
 
@@ -47,7 +53,10 @@ export const scrapeTopics = async (options: {
   }
 
   try {
-    const topics: Element[] = [];
+    const data: ScrapedData = {
+      appTitle: '',
+      topics: [],
+    };
 
     // Don't do these actions if testing, just scrape opened page
     if (!options.testing) {
@@ -55,11 +64,11 @@ export const scrapeTopics = async (options: {
       await clickAndWaitForNavigation(page, classes.pageLinkFirst);
 
       // Set perPage 50 for fast scraping.
-      // For some reason steam page has less total topics with perPage 50, than perPage 15,
-      // so it's not a bug if the server scrapes a bit less topics
+      // For some reason steam page has less total topics with perPage 50, than perPage 15
       await clickAndWaitForNavigation(page, classes.setTopicsCount50);
     }
 
+    const appTitle = getAppTitle(await getPageHTML(page));
     const containerElement = getContainerElement(await getPageHTML(page));
 
     const pageCount =
@@ -79,14 +88,16 @@ export const scrapeTopics = async (options: {
       const containerElement = getContainerElement(await getPageHTML(page));
       const elements = getTopicElements(containerElement);
 
-      topics.push(...elements);
+      data.topics.push(...elements);
       if (i !== pageCount) {
         await clickAndWaitForNavigation(page, attributes.nextButton);
       }
     }
 
+    data.appTitle = appTitle;
+
     await browser.close();
-    return topics;
+    return data;
   } catch (err) {
     await browser.close();
     throw err;

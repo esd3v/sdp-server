@@ -13,3 +13,4 @@ export const sticky = 'sticky';
 export const title = '.forum_topic_name';
 export const topic = '.forum_topic';
 export const topicLink = '.forum_topic_overlay';
+export const appTitle = '.apphub_AppName';

@@ -14,6 +14,16 @@ export const getContainerElement = (html: string) => {
   }
 };
 
+export const getAppTitle = (html: string) => {
+  const element = helpers.getElementFromHTML(html, classes.appTitle);
+
+  if (element) {
+    return element.textContent as string;
+  } else {
+    throw errors.elementDoesntExist(classes.appTitle);
+  }
+};
+
 export const getTopicElements = (container: Element) => {
   const elements = [...container.querySelectorAll(classes.topic)];
 

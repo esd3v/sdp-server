@@ -10,8 +10,9 @@ interface Topic {
   url: string;
 }
 
-interface TopicsCache {
+interface DiscussionCache {
   appID: number;
+  appTitle: string;
   topics: Topic[];
 }
 

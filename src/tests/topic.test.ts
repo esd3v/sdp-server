@@ -5,14 +5,22 @@ import {compileTopic} from '../compiler';
 
 let topics: Element[];
 let topic: Element;
+let appTitle: string;
 
 beforeAll(async () => {
-  topics = await scraper.scrapeTopics({
+  const data = await scraper.scrapeDiscussion({
     testing: true,
     appID: config.TEST_APPID,
   });
+  topics = data.topics;
   topic = topics[0];
+  appTitle = data.appTitle;
 }, config.navigationTimeout);
+
+test(`Title of AppID ${config.TEST_APPID} has been retrieved`, () => {
+  const expected = appTitle !== "";
+  expect(expected).toBeTruthy();
+});
 
 describe('Scrape, parse and compile topic element', () => {
   test(`Topic list of AppID ${config.TEST_APPID} has been retrieved`, () => {
