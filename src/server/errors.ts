@@ -12,25 +12,25 @@ const sendError = (res: any, status: number, {code, message}: {
 };
 
 export const appIDIsNotInteger = (res: any) =>
-  sendError(res, 500, {
+  sendError(res, 400, {
     code: 1,
     message: `'appID' must be an integer`,
   });
 
 export const pageIsNotInteger = (res: any) =>
-  sendError(res, 500, {
+  sendError(res, 400, {
     code: 2,
     message: `'page' must be an integer`,
   });
 
 export const perPageIsNotInteger = (res: any) =>
-  sendError(res, 500, {
+  sendError(res, 400, {
     code: 3,
     message: `'perPage' must be an integer`,
   });
 
 export const noSuchPage = (res: any) =>
-  sendError(res, 500, {
+  sendError(res, 400, {
     code: 4,
     message: 'No such page',
   });
@@ -42,13 +42,13 @@ export const invalidPage = (res: any) =>
   });
 
 export const incorrectPerPage = (res: any) =>
-  sendError(res, 500, {
+  sendError(res, 400, {
     code: 6,
     message: `Incorrect 'perPage' number. Correct values: ${PERPAGE.toString()}`,
   });
 
 export const missingParameters = (res: any, params: string[]) =>
-  sendError(res, 500, {
+  sendError(res, 400, {
     code: 7,
     message: `Missing required parameters: ${params.join(', ')}`,
   });
