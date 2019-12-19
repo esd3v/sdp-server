@@ -1,13 +1,16 @@
 import express from 'express';
 import http from 'http';
 import morgan from 'morgan';
-import {createSocket} from './webSocket';
+import * as webSocket from '../webSocket';
 import * as config from '../config';
+import {isValidJSON} from '../misc';
 import * as routes from './routes';
 
 const headers = (req, res, next) => {
   res.set({
-    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Origin': req['headers']['origin'],
+    'Access-Control-Allow-Headers': 'x-session-id',
+    'Access-Control-Allow-Credentials': true,
   });
   return next();
 };
@@ -17,7 +20,7 @@ export const start = () => {
   const app = express();
   const port = process.env.PORT || config.PORT;
   const server = http.createServer(app);
-  const wss = createSocket(server);
+  const wss = webSocket.createServer({server});
 
   app
     .use(morgan('dev'))
@@ -28,7 +31,17 @@ export const start = () => {
     console.log(`Server listening at: ${port}`));
 
   wss.on('connection', ws => {
-    app.ws = ws;
-    console.log('ws has been injected');
+
+    ws.on('message', (message: string) => {
+      const {sessionID} = isValidJSON(message) && JSON.parse(message);
+
+      if (sessionID) {
+        webSocket.setSocket(ws, sessionID);
+
+        ws.on('close', () => {
+          webSocket.deleteSocket(sessionID);
+        });
+      }
+    });
   });
 };

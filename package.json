@@ -16,6 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cookie": "0.4.0",
     "express": "4.17.1",
     "fs-extra": "8.1.0",
     "jsdom": "15.2.1",
@@ -24,6 +25,7 @@
     "ws": "7.2.0"
   },
   "devDependencies": {
+    "@types/express": "4.17.2",
     "@types/fs-extra": "8.0.1",
     "@types/jest": "24.0.23",
     "@types/jsdom": "12.2.4",

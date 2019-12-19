@@ -3,6 +3,8 @@ import * as config from '../../config';
 import {compileTopics} from '../../compiler';
 import {ElementError} from '../../parser/helpers';
 import {scrapeDiscussion} from '../../scraper/index';
+import {getCookies} from '../../cookies';
+import * as webSocket from '../../webSocket';
 import {
   calculatePageCount,
   getItemsFromPage,
@@ -24,9 +26,13 @@ const PARAMETERS = ['appID', 'page', 'perPage'];
 
 export const root = async (req, res) => {
 
-  const ws = req.app.ws;
-
+  let ws;
+  const sessionID = req.headers['x-session-id'];
   const missingParameters = getMissingParameters(req.query, PARAMETERS);
+
+  if (sessionID) {
+    ws = webSocket.getSocket(sessionID);
+  }
 
   if (missingParameters.length) {
     return errors.missingParameters(res, missingParameters);

@@ -2,6 +2,19 @@ import {URL_DISCUSSION} from './config';
 
 export const trimWhitespace = (str: string) => str.replace(/\s+/g, ' ').trim();
 
+export const isValidJSON = str => {
+  try {
+    const obj = JSON.parse(str);
+
+    if (obj && typeof obj === "object") {
+      return true;
+    }
+    return false;
+  } catch {
+    return false;
+  }
+};
+
 export const calculatePageCount = ({perPage, total}: {
   perPage: number;
   total: number;
