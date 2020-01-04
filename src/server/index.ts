@@ -2,8 +2,9 @@ import express from 'express';
 import http from 'http';
 import morgan from 'morgan';
 import * as webSocket from '../webSocket';
+import * as wsMessages from '../wsMessages';
 import * as config from '../config';
-import {isValidJSON} from '../misc';
+import {handleWSMessage} from '../misc';
 import * as routes from './routes';
 
 const headers = (req, res, next) => {
@@ -33,10 +34,11 @@ export const start = () => {
   wss.on('connection', ws => {
 
     ws.on('message', (message: string) => {
-      const {sessionID} = isValidJSON(message) && JSON.parse(message);
+      const {sessionID} = handleWSMessage(message);
 
       if (sessionID) {
         webSocket.setSocket(ws, sessionID);
+        ws.send(wsMessages.wsOpened);
 
         ws.on('close', () => {
           webSocket.deleteSocket(sessionID);

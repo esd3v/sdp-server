@@ -1,6 +1,8 @@
+import WebSocket from 'ws';
 import * as attributes from '../selectors/attributes';
 import * as classes from '../selectors/classes';
 import * as config from '../config';
+import * as wsMessages from '../wsMessages';
 import * as errors from './errors';
 import {browserConfig} from '../config';
 import {getDiscussionURL} from '../misc';
@@ -35,7 +37,7 @@ export const scrapeDiscussion = async (options: {
   const discussionURL = getDiscussionURL(options.appID);
 
   if (ws) {
-    ws.send(`Preparing to scrape ${discussionURL}`);
+    ws.send(wsMessages.preparingToScrape(discussionURL));
   }
 
   const browser = await createBrowser(browserConfig);
@@ -83,7 +85,7 @@ export const scrapeDiscussion = async (options: {
 
     for (let i = currentPageNumber; i <= pageCount; i++) {
       if (ws) {
-        ws.send(`Scraping page ${i} / ${pageCount}`);
+        ws.send(wsMessages.scrapingPage(i, pageCount));
       }
       const containerElement = getContainerElement(await getPageHTML(page));
       const elements = getTopicElements(containerElement);

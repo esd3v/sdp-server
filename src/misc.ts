@@ -42,3 +42,6 @@ export const getMissingParameters = (retrieved: string[], required: string[]) =>
 
 export const getDiscussionURL = (appID: number) =>
   `${URL_DISCUSSION}/app/${appID}/discussions/`;
+
+export const handleWSMessage = (message: string) =>
+  isValidJSON(message) ? JSON.parse(message) : message;

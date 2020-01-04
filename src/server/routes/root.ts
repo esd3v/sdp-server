@@ -3,8 +3,8 @@ import * as config from '../../config';
 import {compileTopics} from '../../compiler';
 import {ElementError} from '../../parser/helpers';
 import {scrapeDiscussion} from '../../scraper/index';
-import {getCookies} from '../../cookies';
 import * as webSocket from '../../webSocket';
+import * as wsMessages from '../../wsMessages';
 import {
   calculatePageCount,
   getItemsFromPage,
@@ -67,7 +67,7 @@ export const root = async (req, res) => {
       });
 
       if (ws) {
-        ws.send('Parsing scraped topics...');
+        ws.send(wsMessages.parsing);
       }
 
       const compiledTopics = compileTopics(topics);
@@ -79,7 +79,7 @@ export const root = async (req, res) => {
       });
 
       if (ws) {
-        ws.send('Done');
+        ws.send(wsMessages.done);
       }
     } catch (err) {
       console.error(`Error: ${err.message}`);
